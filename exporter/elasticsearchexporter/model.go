@@ -62,6 +62,16 @@ func (m *encodeModel) encodeLog(resource pcommon.Resource, record plog.LogRecord
 	return buf.Bytes(), err
 }
 
+func (m *encodeModel) encodeAttributesToStrings(attributes pcommon.Map) []string {
+	var res []string
+	attributes.Range(func(k string, v pcommon.Value) bool {
+		res = append(res, k+"="+v.AsString())
+		return true
+	})
+
+	return res
+}
+
 func (m *encodeModel) encodeSpan(resource pcommon.Resource, span ptrace.Span, scope pcommon.InstrumentationScope) ([]byte, error) {
 	var document objmodel.Document
 	document.AddTimestamp("@timestamp", span.StartTimestamp()) // We use @timestamp in order to ensure that we can index if the default data stream logs template is used.
@@ -74,7 +84,9 @@ func (m *encodeModel) encodeSpan(resource pcommon.Resource, span ptrace.Span, sc
 	document.AddInt("TraceStatus", int64(span.Status().Code()))
 	document.AddString("Link", spanLinksToString(span.Links()))
 	document.AddAttributes("Attributes", span.Attributes())
+	document.AddStrings("AttributesIndex", m.encodeAttributesToStrings(span.Attributes()))
 	document.AddAttributes("Resource", resource.Attributes())
+	document.AddStrings("ResourceIndex", m.encodeAttributesToStrings(resource.Attributes()))
 	document.AddEvents("Events", span.Events())
 	document.AddInt("Duration", durationAsMicroseconds(span.StartTimestamp().AsTime(), span.EndTimestamp().AsTime())) // unit is microseconds
 	document.AddAttributes("Scope", scopeToAttributes(scope))

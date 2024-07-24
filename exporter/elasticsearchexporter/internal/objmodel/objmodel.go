@@ -125,6 +125,13 @@ func (doc *Document) AddString(key string, v string) {
 	}
 }
 
+// AddStrings adds a string to the document.
+func (doc *Document) AddStrings(key string, vs []string) {
+	if len(vs) != 0 {
+		doc.Add(key, StringValues(vs))
+	}
+}
+
 // AddSpanID adds the hex presentation of a SpanID to the document. If the SpanID
 // is empty, no value will be added.
 func (doc *Document) AddSpanID(key string, id pcommon.SpanID) {
@@ -369,6 +376,15 @@ func (doc *Document) iterJSONDedot(w *json.Visitor) error {
 
 // StringValue create a new value from a string.
 func StringValue(str string) Value { return Value{kind: KindString, str: str} }
+
+// StringValues create a new value from a string.
+func StringValues(strs []string) Value {
+	var vals []Value
+	for _, str := range strs {
+		vals = append(vals, StringValue(str))
+	}
+	return ArrValue(vals...)
+}
 
 // IntValue creates a new value from an integer.
 func IntValue(i int64) Value { return Value{kind: KindInt, primitive: uint64(i)} }
