@@ -51,7 +51,7 @@ func createDefaultConfig() component.Config {
 			MaxInterval:     1 * time.Minute,
 		},
 		Mapping: MappingsSettings{
-			Mode:  "ecs",
+			Mode:  "vestack",
 			Dedup: true,
 			Dedot: true,
 		},
