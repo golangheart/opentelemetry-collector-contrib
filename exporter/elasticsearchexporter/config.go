@@ -181,6 +181,7 @@ const (
 	MappingECS
 	MappingOTel
 	MappingRaw
+	MappingVestack
 )
 
 var (
@@ -198,6 +199,8 @@ func (m MappingMode) String() string {
 		return "otel"
 	case MappingRaw:
 		return "raw"
+	case MappingVestack:
+		return "vestack"
 	default:
 		return ""
 	}
@@ -210,6 +213,7 @@ var mappingModes = func() map[string]MappingMode {
 		MappingECS,
 		MappingOTel,
 		MappingRaw,
+		MappingVestack,
 	} {
 		table[strings.ToLower(m.String())] = m
 	}

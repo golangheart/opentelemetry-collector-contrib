@@ -75,7 +75,7 @@ func createDefaultConfig() component.Config {
 			},
 		},
 		Mapping: MappingsSettings{
-			Mode:  "none",
+			Mode:  "vestack",
 			Dedot: true,
 		},
 		LogstashFormat: LogstashFormatSettings{
